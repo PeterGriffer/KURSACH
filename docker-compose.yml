@@ -1,0 +1,92 @@
+services:
+  app_website:
+    build: .
+    container_name: website
+    networks:
+      - app_network
+
+  app_nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app_network
+    depends_on:
+      app_website:
+        condition: service_started
+      umami:
+        condition: service_healthy
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami_analytics
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@umami-db:5432/${POSTGRES_DB}
+      DATABASE_TYPE: postgresql
+      APP_SECRET: ${APP_SECRET}
+    ports:
+      - "3000:3000"
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - app_network
+
+  umami-db:
+    image: postgres:15-alpine
+    container_name: umami_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app_network
+
+  umami-db-backup:
+    container_name: umami_db_backup
+    image: tiredofit/db-backup
+    volumes:
+      - ./backups:/backup
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: umami-db
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_BACKUP_INTERVAL: 720
+      DB_CLEANUP_TIME: 72000
+      CHECKSUM: SHA1
+      COMPRESSION: GZ
+      CONTAINER_ENABLE_MONITORING: false
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

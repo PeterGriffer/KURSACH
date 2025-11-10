@@ -1,0 +1,80 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 95vh;
+  background: #7277d8;
+  background: radial-gradient(
+    circle,
+    rgba(114, 119, 216, 1) 0%,
+    rgba(8, 14, 115, 1) 100%
+  );
+}
+.main {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 4vh;
+}
+.title {
+ 
+  font-size: 300px;
+  color: #ffb347;
+  text-align: center;
+  text-shadow:0 0 5px #fff;
+}
+.buttons {
+  
+  display: flex;
+  height: 70%;
+  justify-content: space-around;
+  align-items: center;
+  /* border: 2px inset white; */
+  flex-wrap: wrap;
+  row-gap: 100px;
+  column-gap: 100px;
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #ffb347 0%,
+    #ffcc33 51%,
+    #ffb347 100%
+  );
+}
+.btn-grad {
+  min-height: 400px;
+  min-width: 400px;
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  font-weight: 100;
+  font-size: 90px;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 70px;
+  display: block;
+  
+}
+.btn-grad:active {
+  transform: scale(0.9);
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+.text {
+  text-align: center;
+  font-family: "Rubik";
+  font-size: 100px;
+  color: #ffbc00;
+  text-shadow:0 0 10px #fff;
+  overflow-wrap:break-word ;
+}
