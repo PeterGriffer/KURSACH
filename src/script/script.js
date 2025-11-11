@@ -101,6 +101,11 @@ function onClickButton1 (){
         timestamp: new Date().toISOString()
     }
     sendAnalytics(message_to_serverr);
+    umami.track('Кнопка 1', {
+        button: 1,
+        category: 'мотивация',
+        message: message
+    });
 }
 function onClickButton2 (){
    var message=stathamPhrases[getRandomIndex(stathamPhrases)];
@@ -112,6 +117,12 @@ function onClickButton2 (){
         timestamp: new Date().toISOString()
     }
     sendAnalytics(message_to_serverr);
+
+    umami.track('Кнопка 2', {
+        button: 2,
+        category: 'статам',
+        message: message
+    });
 }
 function onClickButton3 (){
     var message=demotivatingPhrases[getRandomIndex(demotivatingPhrases)];
@@ -123,5 +134,10 @@ function onClickButton3 (){
         timestamp: new Date().toISOString()
     }
     sendAnalytics(message_to_serverr);
+    umami.track('Кнопка 3', {
+        button: 3,
+        category: 'демотиватор',
+        message: message
+    });
 }
 
