@@ -25,6 +25,7 @@ services:
     container_name: umami_analytics
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@umami-db:5432/${POSTGRES_DB}
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
       DATABASE_TYPE: postgresql
       APP_SECRET: ${APP_SECRET} 
       DATABASE_CHECK_TIMEOUT: 30000
@@ -34,7 +35,7 @@ services:
     depends_on:
       umami-db:
         condition: service_healthy
-    #restart: unless-stopped
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
       interval: 10s
@@ -53,7 +54,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    #restart: unless-stopped
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -82,7 +83,7 @@ services:
     depends_on:
       umami-db:
         condition: service_healthy
-    #restart: unless-stopped
+    restart: unless-stopped
     networks:
       - app_network
 
