@@ -36,4 +36,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-  
+      - name: Docker Compose Up
+        run: npm run docker:compose
+      - name: Docker Compose Logs
+        run: npm run docker:logs
