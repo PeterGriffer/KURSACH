@@ -4,12 +4,12 @@
   "description": "Website project with Docker and CI/CD",
   "scripts": {
     "dev": "live-server src --port=3000",
-    "test:lint": "docker-compose config -q && docker build -t test-image .",
-    "test": "docker-compose up -d && sleep 10 && curl -f http://localhost:80",
-    "build": "docker-compose build",
+    "test:lint": "docker compose config -q && docker build -t test-image .",
+    "test": "docker compose up -d && sleep 10 && curl -f http://localhost:80",
+    "build": "docker compose build",
     "build:docker": "docker build -t kursovaya-website .",
-    "docker:compose": "docker-compose up -d",
-    "docker:logs": "docker-compose logs -f",
+    "docker:compose": "docker compose up -d",
+    "docker:logs": "docker compose logs -f",
     "ci:validate": "npm run test:lint && npm run docker:build",
     "clean": "echo 'Clean would run here'"
   },
