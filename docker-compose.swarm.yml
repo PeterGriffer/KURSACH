@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   website:
-    image: kursovaya-app_website:latest
+    image: petergriffer/kursach_website:latest
     deploy:
       replicas: 2
       restart_policy:
@@ -64,7 +64,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 90s  # Больше времени для миграций БД
+      start_period: 90s  
     networks:
       - app_network
 

@@ -137,7 +137,7 @@ function onClickButton3 (){
     umami.track('Кнопка 3', {
         button: 3,
         category: 'демотиватор',
-        message: message
+        message: message 
     });
 }
 

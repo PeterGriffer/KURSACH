@@ -1,6 +1,6 @@
 services:
   app_website:
-    build: .
+    image: petergriffer/kursach_website:latest
     container_name: website
     networks:
       - app_network

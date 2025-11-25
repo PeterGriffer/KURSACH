@@ -5,10 +5,13 @@
   "scripts": {
     "test:lint": "docker compose config -q && docker build -t test-image .",
     "test": "docker compose up -d && sleep 10 && curl -f http://localhost:80",
-    "build": "docker compose build",
+    "build:image": "docker build -t petergriffer/kursach_website .",
     "build:docker": "docker build -t kursovaya-website .",
     "docker:compose": "docker compose up -d",
-    "test:curl": "curl -f http://localhost:80"
+    "test:curl": "curl -f http://localhost:80",
+    "deploy:connect": "secret.{}",
+    "deploy:publication": "",
+    "deploy:check": ""
   },
   "devDependencies": {
     "live-server": "^1.2.2"
