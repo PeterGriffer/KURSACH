@@ -66,3 +66,19 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/kursach_website:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    needs: [build_and_push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Install npm
+        run: npm install
+      - name: Install deps
+        run: npm ci
+      - name: Deploy
+        env:
+          SWARM_MANAGER_IP: ${{ secrets.SWARM_MANAGER_IP }}
+          SSH_KEY: ${{secrets.SWARM_MANAGER_SSH}}
+        run: npm run deploy:full
+      
