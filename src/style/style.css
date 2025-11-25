@@ -19,7 +19,7 @@ body {
 }
 .title {
  
-  font-size: 100px;
+   font-size: clamp(40px, 10vw, 100px);
   color: #ffb347;
   text-align: center;
   text-shadow:0 0 3px #fff;
