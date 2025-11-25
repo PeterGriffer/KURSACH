@@ -70,15 +70,20 @@ jobs:
     needs: [build_and_push]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Install npm
-        run: npm install
-      - name: Install deps
-        run: npm ci
-      - name: Deploy
-        env:
-          SWARM_MANAGER_IP: ${{ secrets.SWARM_MANAGER_IP }}
-          SSH_KEY: ${{secrets.SWARM_MANAGER_SSH}}
-        run: npm run deploy:full
+      - name: Deploy to Swarm
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SWARM_MANAGER_IP }}
+          username: root
+          key: ${{ secrets.SWARM_MANAGER_SSH }}
+          script: |
+            echo " SSH подключение работает!"
+            cd /opt/kursach
+            git pull origin main
+            echo " Запускаем Docker Stack..."
+            docker stack deploy -c docker-compose.swarm.yml kursach --with-registry-auth
+            echo " Проверяем сервисы..."
+            sleep 15
+            docker service ls
+            echo " Деплой завершен!"
       
