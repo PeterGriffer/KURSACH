@@ -35,7 +35,7 @@ jobs:
       - name: Install deps
         run: npm ci
       - name: Build
-        run: npm run build
+        run: npm run build:image
       - name: Docker Compose Up
         run: npm run docker:compose
       - name: Test with Curl
