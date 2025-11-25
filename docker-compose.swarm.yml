@@ -26,7 +26,7 @@ services:
   umami:
     image: ghcr.io/umami-software/umami:postgresql-latest
     environment:
-      DATABASE_URL: postgresql://umami:umami123@umami-db:5432/umami
+      DATABASE_URL: postgresql://umami:umami123@umami-db:5432/umami  
       DATABASE_TYPE: postgresql
       APP_SECRET: my-super-secret-key-change-this-in-production
     deploy:
@@ -57,7 +57,7 @@ services:
       - ./backups:/backup
     environment:
       DB_TYPE: postgres
-      DB_HOST: umami-db
+      DB_HOST: umami-db  
       DB_NAME: umami
       DB_USER: umami
       DB_PASS: umami123
