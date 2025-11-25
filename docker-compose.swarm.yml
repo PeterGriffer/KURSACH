@@ -54,7 +54,7 @@ services:
   umami-db-backup:
     image: tiredofit/db-backup
     volumes:
-      - ./backups:/backup
+      - postgres_backup:/backup  
     environment:
       DB_TYPE: postgres
       DB_HOST: umami-db  
@@ -67,11 +67,8 @@ services:
         condition: on-failure
     networks:
       - app_network
-
-networks:
-  app_network:
-    driver: overlay
-
 volumes:
   postgres_data:
+    driver: local
+  postgres_backup:  
     driver: local
