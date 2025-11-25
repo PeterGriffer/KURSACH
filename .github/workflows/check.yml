@@ -78,8 +78,8 @@ jobs:
           key: ${{ secrets.SWARM_MANAGER_SSH }}
           script: |
             echo " SSH подключение работает!"
-            cd /opt/kursach
-            git pull origin main
+            git pull https://github.com/PeterGriffer/KURSACH.git
+            cd /opt/KURSACH
             echo " Запускаем Docker Stack..."
             docker stack deploy -c docker-compose.swarm.yml kursach --with-registry-auth
             echo " Проверяем сервисы..."
