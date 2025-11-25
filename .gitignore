@@ -1,2 +1,3 @@
 backups/
 .github/workflows/deploy.yml
+.github/workflows/buildandpush.yml
