@@ -7,64 +7,32 @@ services:
       replicas: 2
       restart_policy:
         condition: on-failure
-        delay: 10s
-        max_attempts: 3
-        window: 120s
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
-      placement:
-        constraints:
-          - node.role == worker
     networks:
       - app_network
 
   nginx:
     image: nginx:alpine
     ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host  # Лучше для production чем ingress
+      - "80:80"
     volumes:
       - ./nginx.swarm.conf:/etc/nginx/nginx.conf
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints:
-          - node.role == manager
     networks:
       - app_network
 
   umami:
     image: ghcr.io/umami-software/umami:postgresql-latest
     environment:
-      DATABASE_URL: postgresql://umami:umami123@tasks.umami-db:5432/umami  # Используем tasks.
+      DATABASE_URL: postgresql://umami:umami123@umami-db:5432/umami
       DATABASE_TYPE: postgresql
       APP_SECRET: my-super-secret-key-change-this-in-production
-      DATABASE_CHECK_TIMEOUT: "30000"
-      DATABASE_CHECK_INTERVAL: "5000"
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-        delay: 30s
-        max_attempts: 3
-      update_config:
-        delay: 15s
-        failure_action: rollback
-      placement:
-        constraints:
-          - node.role == worker
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/heartbeat"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s  
     networks:
       - app_network
 
@@ -74,23 +42,12 @@ services:
       POSTGRES_DB: umami
       POSTGRES_USER: umami
       POSTGRES_PASSWORD: umami123
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-        delay: 15s
-      placement:
-        constraints:
-          - node.labels.db == true  # Специальная нода для БД
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
     networks:
       - app_network
 
@@ -100,35 +57,21 @@ services:
       - ./backups:/backup
     environment:
       DB_TYPE: postgres
-      DB_HOST: tasks.umami-db  # Используем tasks.
+      DB_HOST: umami-db
       DB_NAME: umami
       DB_USER: umami
       DB_PASS: umami123
-      DB_BACKUP_INTERVAL: 720
-      DB_CLEANUP_TIME: 72000
-      CHECKSUM: SHA1
-      COMPRESSION: GZ
-      CONTAINER_ENABLE_MONITORING: "false"
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints:
-          - node.role == manager
     networks:
       - app_network
 
 networks:
   app_network:
     driver: overlay
-    attachable: true
-    # Опционально для лучшей производительности:
-    driver_opts:
-      encrypted: "true"
 
 volumes:
   postgres_data:
     driver: local
-    # Для multi-node лучше использовать распределенное хранилище:
-    # driver: cloudstor:aws  # или другой cloud driver
