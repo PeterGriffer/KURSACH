@@ -13,7 +13,7 @@
     "deploy:pull": "git pull https://github.com/PeterGriffer/KURSACH.git && cd KURSACH",
     "deploy:publication": "docker stack deploy -c docker-compose.swarm.yml kursach",
     "deploy:check": "docker service ls && docker node ls",
-    "deploy:full": "bash -c 'ssh -i <(echo \"$SSH_KEY\") -o StrictHostKeyChecking=no root@$SWARM_MANAGER_IP \"cd /opt/kursach && git pull && docker stack deploy -c docker-compose.swarm.yml kursach --with-registry-auth && docker service ls\"' echo 'Это реальный успех!' "
+    "deploy:full": "bash -c 'ssh -i <(echo \"$SSH_KEY\") -o StrictHostKeyChecking=no root@$SWARM_MANAGER_IP \"cd /opt/kursach && git pull && docker stack deploy -c docker-compose.swarm.yml kursach --with-registry-auth && docker service ls\"' echo 'Это реальный успехa!' "
   },
   "devDependencies": {
     "live-server": "^1.2.2"
